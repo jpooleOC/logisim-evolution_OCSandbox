@@ -27,7 +27,7 @@ import javax.swing.JOptionPane;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
-class MenuEdit extends Menu {
+public class MenuEdit extends Menu {
   private static final long serialVersionUID = 1L;
   private final LogisimMenuBar menubar;
   private final JMenuItem undo = new JMenuItem();

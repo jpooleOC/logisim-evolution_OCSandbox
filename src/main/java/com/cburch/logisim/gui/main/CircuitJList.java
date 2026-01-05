@@ -19,7 +19,7 @@ import java.util.Vector;
 import javax.swing.JList;
 
 @SuppressWarnings("rawtypes")
-class CircuitJList extends JList {
+public class CircuitJList extends JList {
   private static final long serialVersionUID = 1L;
 
   @SuppressWarnings("unchecked")
