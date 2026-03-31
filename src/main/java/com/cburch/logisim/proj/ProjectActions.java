@@ -84,7 +84,9 @@ public final class ProjectActions {
       }
     }
   }
-
+  public void resetSimulation() {
+    // Sprint 1
+  }
   /**
    * Returns true if the filename contains valid characters only, that is, alphanumeric characters
    * and underscores.
