@@ -13,6 +13,7 @@ import static com.cburch.logisim.gui.Strings.S;
 
 import com.cburch.logisim.data.Direction;
 import com.cburch.logisim.fpga.gui.ZoomSlider;
+import com.cburch.logisim.gui.Strings;
 import com.cburch.logisim.prefs.AppPreferences;
 import com.cburch.logisim.proj.Projects;
 import com.cburch.logisim.util.TableLayout;
@@ -132,6 +133,12 @@ class WindowOptions extends OptionsPanel {
     componentIconColor = new ColorChooserButton(window, AppPreferences.COMPONENT_ICON_COLOR);
     panel.add(componentIconColorTitle);
     panel.add(componentIconColor);
+
+    JLabel defaultTextColorLabel = new JLabel(S.get("Default Text Color"));
+    ColorChooserButton defaultTextColorPicker = new ColorChooserButton(window, AppPreferences.DEFAULT_TEXT_COLOR);
+    panel.add(defaultTextColorLabel);
+    panel.add(defaultTextColorPicker);
+
 
     gridColorsResetButton = new JButton();
     gridColorsResetButton.addActionListener(listener);
