@@ -13,10 +13,7 @@ import static com.cburch.logisim.gui.Strings.S;
 
 import com.cburch.draw.toolbar.Toolbar;
 import com.cburch.logisim.Main;
-import com.cburch.logisim.circuit.Circuit;
-import com.cburch.logisim.circuit.CircuitEvent;
-import com.cburch.logisim.circuit.CircuitListener;
-import com.cburch.logisim.circuit.CircuitState;
+import com.cburch.logisim.circuit.*;
 import com.cburch.logisim.comp.Component;
 import com.cburch.logisim.data.AttributeEvent;
 import com.cburch.logisim.data.AttributeSet;
@@ -114,10 +111,16 @@ public class Frame extends LFrame.MainWindow implements LocaleListener {
   private Double lastFraction = AppPreferences.WINDOW_RIGHT_SPLIT.get();
   private final RegTabContent regTabContent;
 
+  private final Simulator simulator;
+
+
   public Frame(Project project) {
     super(project);
     this.project = project;
 
+    this.simulator = new Simulator(project);
+
+    AppPreferences.TICK_FREQUENCY.set(simulator.getTickFrequency());
     setBackground(Color.white);
     setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     addWindowListener(new MyWindowListener());
@@ -129,6 +132,7 @@ public class Frame extends LFrame.MainWindow implements LocaleListener {
     // set up elements for the Layout view
     layoutToolbarModel = new LayoutToolbarModel(this, project);
     layoutCanvas = new Canvas(project);
+    simulator.attachPauseKey(layoutCanvas);
     final var canvasPane = new CanvasPane(layoutCanvas);
 
     layoutZoomModel =
