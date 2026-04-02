@@ -14,6 +14,7 @@ import com.cburch.logisim.comp.ComponentDrawContext;
 import com.cburch.logisim.gui.log.ClockSource;
 import com.cburch.logisim.gui.log.ComponentSelector;
 import com.cburch.logisim.prefs.AppPreferences;
+import com.cburch.logisim.proj.Project;
 import com.cburch.logisim.util.CollectionUtil;
 import com.cburch.logisim.util.UniquelyNamedThread;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class Simulator {
       didTick = t;
       didSingleStep = s;
       didPropagate = p;
+
     }
 
     public Simulator getSource() {
@@ -82,7 +84,21 @@ public class Simulator {
      */
     public void propagationCompleted(Event e);
   }
+    public void togglePause() {
+    setAutoTicking(!isAutoTicking());
+  }
+  // --- ADD THIS METHOD ---
+  public void attachPauseKey(javax.swing.JComponent component) {
+    component.getInputMap(javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW)
+            .put(javax.swing.KeyStroke.getKeyStroke("P"), "togglePause");
 
+    component.getActionMap().put("togglePause", new javax.swing.AbstractAction() {
+      @Override
+      public void actionPerformed(java.awt.event.ActionEvent e) {
+        togglePause();
+      }
+    });
+  }
   public static interface ProgressListener extends Listener {
     public boolean wantsProgressEvents();
 
@@ -606,7 +622,7 @@ public class Simulator {
   private volatile int numListeners = 0;
   private volatile Listener[] listeners = new Listener[10];
 
-  public Simulator() {
+  public Simulator(Project project) {
     simThread = new SimThread(this);
 
     try {
