@@ -39,6 +39,10 @@ class WindowOptions extends OptionsPanel {
   private final PrefOptionList canvasPlacement;
   private final PrefOptionList toolbarPlacement;
 
+  private final JButton applyLookAndFeelButton;
+  private final JButton resetLookAndFeelButton;
+
+
   private final JButton resetWindowLayoutButton;
   private final ColorChooserButton canvasBgColor;
   private final JLabel canvasBgColorTitle;
@@ -70,6 +74,53 @@ class WindowOptions extends OptionsPanel {
   protected final String cmdResetGridColors = "reset-grid-colors";
   protected final String cmdSetAutoScaleFactor = "set-auto-scale-factor";
 
+  protected final String cmdApplyLookAndFeel = "apply-look-and-feel";
+  protected final String cmdResetLookAndFeel = "reset-look-and-feel";
+
+  static void refreshShowingWindows() {
+    for (java.awt.Window window : java.awt.Window.getWindows()) {
+      if (window != null && window.isShowing()) {
+        javax.swing.SwingUtilities.updateComponentTreeUI(window);
+        window.invalidate();
+        window.validate();
+        window.repaint();
+      }
+    }
+  }
+
+  private void applySelectedLookAndFeel() {
+    int selected = lookAndFeel.getSelectedIndex();
+    if (selected < 0) return;
+
+    try {
+      String className = lookAndFeelInfos[selected].getClassName();
+      AppPreferences.LookAndFeel.set(className);
+      UIManager.setLookAndFeel(className);
+
+      refreshShowingWindows();
+
+      index = selected;
+      initThemePreviewer();
+
+    } catch (IllegalAccessException
+             | UnsupportedLookAndFeelException
+             | InstantiationException
+             | ClassNotFoundException ignored) {
+    }
+  }
+
+  private void resetLookAndFeelToDefault() {
+    String defaultLookAndFeel = com.formdev.flatlaf.FlatIntelliJLaf.class.getName();
+
+    for (int i = 0; i < lookAndFeelInfos.length; i++) {
+      if (lookAndFeelInfos[i].getClassName().equals(defaultLookAndFeel)) {
+        lookAndFeel.setSelectedIndex(i);
+        break;
+      }
+    }
+
+    applySelectedLookAndFeel();
+  }
   public WindowOptions(PreferencesFrame window) {
     super(window);
 
@@ -184,7 +235,19 @@ class WindowOptions extends OptionsPanel {
     lookfeelLabel = new JLabel(S.get("windowToolbarLookandfeel"));
     panel.add(lookfeelLabel);
     panel.add(lookAndFeel);
-    lookAndFeel.addActionListener(listener);
+
+    applyLookAndFeelButton = new JButton("Apply");
+    applyLookAndFeelButton.addActionListener(listener);
+    applyLookAndFeelButton.setActionCommand(cmdApplyLookAndFeel);
+
+    resetLookAndFeelButton = new JButton("Reset to Default");
+    resetLookAndFeelButton.addActionListener(listener);
+    resetLookAndFeelButton.setActionCommand(cmdResetLookAndFeel);
+
+    panel.add(new JLabel(""));
+    panel.add(applyLookAndFeelButton);
+    panel.add(new JLabel(""));
+    panel.add(resetLookAndFeelButton);
 
     final var previewLabel = new JLabel(S.get("windowToolbarPreview"));
     panel.add(previewLabel);
@@ -253,6 +316,8 @@ class WindowOptions extends OptionsPanel {
     componentColorTitle.setText(S.get("windowComponentColor"));
     gridColorsResetButton.setText(S.get("windowGridColorsReset"));
     zoomAutoButton.setText(S.get("windowSetAutoScaleFactor"));
+    applyLookAndFeelButton.setText("Apply");
+    resetLookAndFeelButton.setText("Reset to Default");
   }
 
   private class SettingsChangeListener implements ChangeListener, ActionListener {
@@ -273,12 +338,10 @@ class WindowOptions extends OptionsPanel {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-      if (e.getSource().equals(lookAndFeel)) {
-        if (lookAndFeel.getSelectedIndex() != index) {
-          index = lookAndFeel.getSelectedIndex();
-          AppPreferences.LookAndFeel.set(lookAndFeelInfos[index].getClassName());
-          initThemePreviewer();
-        }
+      if (e.getActionCommand().equals(cmdApplyLookAndFeel)) {
+        applySelectedLookAndFeel();
+      } else if (e.getActionCommand().equals(cmdResetLookAndFeel)) {
+        resetLookAndFeelToDefault();
       } else if (e.getActionCommand().equals(cmdResetWindowLayout)) {
         AppPreferences.resetWindow();
         final var nowOpen = Projects.getOpenProjects();
@@ -288,7 +351,6 @@ class WindowOptions extends OptionsPanel {
           proj.getFrame().repaint();
         }
       } else if (e.getActionCommand().equals(cmdResetGridColors)) {
-        //        AppPreferences.resetWindow();
         final var nowOpen = Projects.getOpenProjects();
         AppPreferences.setDefaultGridColors();
         for (final var proj : nowOpen) {
