@@ -14,7 +14,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.cburch.logisim.util.StringUtil;
 import org.junit.jupiter.api.Test;
-
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 public class StringUtilTest extends TestBase {
 
   /** Checks if isNotEmpty() correctly handles non-null and non-empty strings. */
@@ -58,5 +59,10 @@ public class StringUtilTest extends TestBase {
 
     assertTrue(StringUtil.startsWith(haystick, needle));
     assertFalse(StringUtil.startsWith(haystick, needle.substring(1)));
+  }
+  @Test
+  public void testToHexString() {
+    String result = StringUtil.toHexString(4, 255);
+    assertNotNull(result);
   }
 }
