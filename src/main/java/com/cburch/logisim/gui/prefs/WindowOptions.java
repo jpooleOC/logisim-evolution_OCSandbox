@@ -13,10 +13,12 @@ import static com.cburch.logisim.gui.Strings.S;
 
 import com.cburch.logisim.data.Direction;
 import com.cburch.logisim.fpga.gui.ZoomSlider;
+import com.cburch.logisim.gui.Strings;
 import com.cburch.logisim.prefs.AppPreferences;
 import com.cburch.logisim.proj.Projects;
 import com.cburch.logisim.util.TableLayout;
-import java.awt.Font;
+
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -132,6 +134,40 @@ class WindowOptions extends OptionsPanel {
     componentIconColor = new ColorChooserButton(window, AppPreferences.COMPONENT_ICON_COLOR);
     panel.add(componentIconColorTitle);
     panel.add(componentIconColor);
+
+    JLabel defaultTextColorLabel = new JLabel(S.get("defaultTextColor"));
+    ColorChooserButton defaultTextColorPicker = new ColorChooserButton(window, AppPreferences.DEFAULT_TEXT_COLOR);
+    panel.add(defaultTextColorLabel);
+    panel.add(defaultTextColorPicker);
+
+    Color initialColor = new Color(AppPreferences.DEFAULT_TEXT_COLOR.get());
+
+    defaultTextColorLabel.setForeground(initialColor);
+
+
+    java.beans.PropertyChangeListener colorUpdater = event -> {
+      if ("defaultTextColor".equals(event.getPropertyName())) {
+
+
+
+        Color liveUpdatedColor = new Color(AppPreferences.DEFAULT_TEXT_COLOR.get());
+        defaultTextColorLabel.setForeground(liveUpdatedColor);
+
+        if (defaultTextColorLabel.getParent() != null) {
+          defaultTextColorLabel.getParent().repaint();
+        } else {
+          defaultTextColorLabel.repaint();
+        }
+      }
+    };
+
+
+    AppPreferences.addPropertyChangeListener(colorUpdater);
+
+
+    defaultTextColorLabel.putClientProperty("DCC", colorUpdater);
+
+
 
     gridColorsResetButton = new JButton();
     gridColorsResetButton.addActionListener(listener);
