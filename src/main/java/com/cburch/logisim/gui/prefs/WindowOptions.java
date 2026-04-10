@@ -77,6 +77,16 @@ class WindowOptions extends OptionsPanel {
   protected final String cmdApplyLookAndFeel = "apply-look-and-feel";
   protected final String cmdResetLookAndFeel = "reset-look-and-feel";
 
+  static void refreshShowingWindows() {
+    for (java.awt.Window window : java.awt.Window.getWindows()) {
+      if (window != null && window.isShowing()) {
+        javax.swing.SwingUtilities.updateComponentTreeUI(window);
+        window.invalidate();
+        window.validate();
+        window.repaint();
+      }
+    }
+  }
 
   private void applySelectedLookAndFeel() {
     int selected = lookAndFeel.getSelectedIndex();
@@ -87,18 +97,7 @@ class WindowOptions extends OptionsPanel {
       AppPreferences.LookAndFeel.set(className);
       UIManager.setLookAndFeel(className);
 
-      final var nowOpen = Projects.getOpenProjects();
-      for (final var proj : nowOpen) {
-        javax.swing.SwingUtilities.updateComponentTreeUI(proj.getFrame());
-        proj.getFrame().revalidate();
-        proj.getFrame().repaint();
-      }
-
-      final var prefWindow = javax.swing.SwingUtilities.getWindowAncestor(this);
-      if (prefWindow != null) {
-        javax.swing.SwingUtilities.updateComponentTreeUI(prefWindow);
-        prefWindow.repaint();
-      }
+      refreshShowingWindows();
 
       index = selected;
       initThemePreviewer();
