@@ -144,7 +144,7 @@ class WindowOptions extends OptionsPanel {
 
     defaultTextColorLabel.setForeground(initialColor);
 
-    // 1. Give the listener a strong variable name
+
     java.beans.PropertyChangeListener colorUpdater = event -> {
       if ("defaultTextColor".equals(event.getPropertyName())) {
 
@@ -161,10 +161,10 @@ class WindowOptions extends OptionsPanel {
       }
     };
 
-// 2. Add it to the preferences manager
+
     AppPreferences.addPropertyChangeListener(colorUpdater);
 
-// 3. THE MAGIC LIFELINE: Tie the listener to the label so Java cannot delete it!
+
     defaultTextColorLabel.putClientProperty("DCC", colorUpdater);
 
 
