@@ -23,6 +23,7 @@ plugins {
   application
   id("com.gradleup.shadow") version "9.3.0"
   id("org.sonarqube") version "7.2.1.6560"
+  id("jacoco")
 }
 
 repositories {

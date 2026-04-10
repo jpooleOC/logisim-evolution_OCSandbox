@@ -135,7 +135,7 @@ public class SocMemMapModel extends AbstractTableModel
 
     public Color getColor() {
       if (slave == null)
-        return Color.LIGHT_GRAY;
+        return Color.BLACK;
       return hasOverlap ? Color.RED : Color.GREEN;
     }
 
