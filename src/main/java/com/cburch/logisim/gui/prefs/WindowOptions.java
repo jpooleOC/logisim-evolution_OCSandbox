@@ -148,7 +148,7 @@ class WindowOptions extends OptionsPanel {
     java.beans.PropertyChangeListener colorUpdater = event -> {
       if ("defaultTextColor".equals(event.getPropertyName())) {
 
-        System.out.println("SUCCESS: The Garbage Collector didn't get me!");
+
 
         Color liveUpdatedColor = new Color(AppPreferences.DEFAULT_TEXT_COLOR.get());
         defaultTextColorLabel.setForeground(liveUpdatedColor);
