@@ -17,7 +17,8 @@ import com.cburch.logisim.gui.Strings;
 import com.cburch.logisim.prefs.AppPreferences;
 import com.cburch.logisim.proj.Projects;
 import com.cburch.logisim.util.TableLayout;
-import java.awt.Font;
+
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -134,10 +135,38 @@ class WindowOptions extends OptionsPanel {
     panel.add(componentIconColorTitle);
     panel.add(componentIconColor);
 
-    JLabel defaultTextColorLabel = new JLabel(S.get("Default Text Color"));
+    JLabel defaultTextColorLabel = new JLabel(S.get("defaultTextColor"));
     ColorChooserButton defaultTextColorPicker = new ColorChooserButton(window, AppPreferences.DEFAULT_TEXT_COLOR);
     panel.add(defaultTextColorLabel);
     panel.add(defaultTextColorPicker);
+
+    Color initialColor = new Color(AppPreferences.DEFAULT_TEXT_COLOR.get());
+
+    defaultTextColorLabel.setForeground(initialColor);
+
+    // 1. Give the listener a strong variable name
+    java.beans.PropertyChangeListener colorUpdater = event -> {
+      if ("defaultTextColor".equals(event.getPropertyName())) {
+
+        System.out.println("SUCCESS: The Garbage Collector didn't get me!");
+
+        Color liveUpdatedColor = new Color(AppPreferences.DEFAULT_TEXT_COLOR.get());
+        defaultTextColorLabel.setForeground(liveUpdatedColor);
+
+        if (defaultTextColorLabel.getParent() != null) {
+          defaultTextColorLabel.getParent().repaint();
+        } else {
+          defaultTextColorLabel.repaint();
+        }
+      }
+    };
+
+// 2. Add it to the preferences manager
+    AppPreferences.addPropertyChangeListener(colorUpdater);
+
+// 3. THE MAGIC LIFELINE: Tie the listener to the label so Java cannot delete it!
+    defaultTextColorLabel.putClientProperty("DCC", colorUpdater);
+
 
 
     gridColorsResetButton = new JButton();
