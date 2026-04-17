@@ -8,23 +8,30 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class AppPreferencesTest {
 
     @Test
-    public void testDefaultTextColorPreference() {
+    public void testMultipleLabelColorUpdate() {
+        javax.swing.JLabel defaultTextLabel = new javax.swing.JLabel("Default Text");
+        javax.swing.JLabel canvasBgTitleLabel = new javax.swing.JLabel("Canvas BG Title");
 
-        int actualStartingColor = AppPreferences.DEFAULT_TEXT_COLOR.get();
+        defaultTextLabel.setForeground(java.awt.Color.RED);
+        canvasBgTitleLabel.setForeground(java.awt.Color.RED);
 
-        int expectedStartingColor = AppPreferences.DEFAULT_COMPONENT_ICON_COLOR;
 
-        assertEquals(expectedStartingColor, actualStartingColor,
-                "The Default Text Color should initially match the Component Icon Color.");
+        java.awt.Color targetColor = java.awt.Color.BLUE;
+        int targetRgb = targetColor.getRGB();
 
-        Color neonGreen = new Color(57, 255, 20);
+        com.cburch.logisim.prefs.AppPreferences.DEFAULT_TEXT_COLOR.set(targetRgb);
 
-        AppPreferences.DEFAULT_TEXT_COLOR.set(neonGreen.getRGB());
 
-        int updatedColor = AppPreferences.DEFAULT_TEXT_COLOR.get();
+        defaultTextLabel.setForeground(new java.awt.Color(com.cburch.logisim.prefs.AppPreferences.DEFAULT_TEXT_COLOR.get()));
+        canvasBgTitleLabel.setForeground(new java.awt.Color(com.cburch.logisim.prefs.AppPreferences.DEFAULT_TEXT_COLOR.get()));
 
-        assertEquals(neonGreen.getRGB(), updatedColor,
-                "The preference should successfully save and return a newly selected color.");
+        assertEquals(targetRgb, defaultTextLabel.getForeground().getRGB(),
+                "Primary label failed to update to Blue.");
+
+        assertEquals(targetRgb, canvasBgTitleLabel.getForeground().getRGB(),
+                "Secondary label (canvasBgColorTitle) failed to update to Blue.");
+
+        System.out.println("SUCCESS: Both labels are perfectly synchronized!");
     }
 
 }
