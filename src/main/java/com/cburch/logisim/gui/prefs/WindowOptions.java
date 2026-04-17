@@ -13,10 +13,12 @@ import static com.cburch.logisim.gui.Strings.S;
 
 import com.cburch.logisim.data.Direction;
 import com.cburch.logisim.fpga.gui.ZoomSlider;
+import com.cburch.logisim.gui.Strings;
 import com.cburch.logisim.prefs.AppPreferences;
 import com.cburch.logisim.proj.Projects;
 import com.cburch.logisim.util.TableLayout;
-import java.awt.Font;
+
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -110,28 +112,74 @@ class WindowOptions extends OptionsPanel {
 
     canvasBgColorTitle = new JLabel(S.get("windowCanvasBgColor"));
     canvasBgColor = new ColorChooserButton(window, AppPreferences.CANVAS_BG_COLOR);
+    bindColorUpdate(canvasBgColorTitle, "defaultTextColor", AppPreferences.DEFAULT_TEXT_COLOR);
+
+
     panel.add(canvasBgColorTitle);
     panel.add(canvasBgColor);
     gridBgColorTitle = new JLabel(S.get("windowGridBgColor"));
     gridBgColor = new ColorChooserButton(window, AppPreferences.GRID_BG_COLOR);
+    bindColorUpdate(gridBgColorTitle, "defaultTextColor", AppPreferences.DEFAULT_TEXT_COLOR);
+
     panel.add(gridBgColorTitle);
     panel.add(gridBgColor);
     gridDotColorTitle = new JLabel(S.get("windowGridDotColor"));
     gridDotColor = new ColorChooserButton(window, AppPreferences.GRID_DOT_COLOR);
+    bindColorUpdate(gridDotColorTitle, "defaultTextColor", AppPreferences.DEFAULT_TEXT_COLOR);
+
     panel.add(gridDotColorTitle);
     panel.add(gridDotColor);
     gridZoomedDotColorTitle = new JLabel(S.get("windowGridZoomedDotColor"));
     gridZoomedDotColor = new ColorChooserButton(window, AppPreferences.GRID_ZOOMED_DOT_COLOR);
+    bindColorUpdate(gridZoomedDotColorTitle, "defaultTextColor", AppPreferences.DEFAULT_TEXT_COLOR);
+
     panel.add(gridZoomedDotColorTitle);
     panel.add(gridZoomedDotColor);
     componentColorTitle = new JLabel(S.get("windowComponentColor"));
+    bindColorUpdate(componentColorTitle, "defaultTextColor", AppPreferences.DEFAULT_TEXT_COLOR);
     componentColor = new ColorChooserButton(window, AppPreferences.COMPONENT_COLOR);
     panel.add(componentColorTitle);
     panel.add(componentColor);
     componentIconColorTitle = new JLabel(S.get("windowComponentIconColor"));
     componentIconColor = new ColorChooserButton(window, AppPreferences.COMPONENT_ICON_COLOR);
+    bindColorUpdate(componentIconColorTitle, "defaultTextColor", AppPreferences.DEFAULT_TEXT_COLOR);
+
     panel.add(componentIconColorTitle);
     panel.add(componentIconColor);
+
+    JLabel defaultTextColorLabel = new JLabel(S.get("defaultTextColor"));
+    ColorChooserButton defaultTextColorPicker = new ColorChooserButton(window, AppPreferences.DEFAULT_TEXT_COLOR);
+    panel.add(defaultTextColorLabel);
+    panel.add(defaultTextColorPicker);
+
+    Color initialColor = new Color(AppPreferences.DEFAULT_TEXT_COLOR.get());
+
+    defaultTextColorLabel.setForeground(initialColor);
+
+
+    java.beans.PropertyChangeListener colorUpdater = event -> {
+      if ("defaultTextColor".equals(event.getPropertyName())) {
+
+
+
+        Color liveUpdatedColor = new Color(AppPreferences.DEFAULT_TEXT_COLOR.get());
+        defaultTextColorLabel.setForeground(liveUpdatedColor);
+
+        if (defaultTextColorLabel.getParent() != null) {
+          defaultTextColorLabel.getParent().repaint();
+        } else {
+          defaultTextColorLabel.repaint();
+        }
+      }
+    };
+
+
+    AppPreferences.addPropertyChangeListener(colorUpdater);
+
+
+    defaultTextColorLabel.putClientProperty("DCC", colorUpdater);
+
+
 
     gridColorsResetButton = new JButton();
     gridColorsResetButton.addActionListener(listener);
@@ -302,4 +350,26 @@ class WindowOptions extends OptionsPanel {
       }
     }
   }
+  private void bindColorUpdate(JLabel targetLabel, String propertyName, com.cburch.logisim.prefs.PrefMonitor<Integer> prefMonitor) {
+
+    targetLabel.setForeground(new Color(prefMonitor.get()));
+
+    java.beans.PropertyChangeListener updater = event -> {
+      if (propertyName.equals(event.getPropertyName())) {
+        targetLabel.setForeground(new Color(prefMonitor.get()));
+
+        if (targetLabel.getParent() != null) {
+          targetLabel.getParent().repaint();
+        } else {
+          targetLabel.repaint();
+        }
+      }
+    };
+
+    // 3. Attach and protect from Garbage Collection
+    AppPreferences.addPropertyChangeListener(updater);
+    targetLabel.putClientProperty(propertyName + "_Lifeline", updater);
+  }
+
+
 }
