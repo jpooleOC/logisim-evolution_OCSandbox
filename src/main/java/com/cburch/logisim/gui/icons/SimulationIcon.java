@@ -22,6 +22,7 @@ public class SimulationIcon extends BaseIcon {
   public static final int SIM_DISABLE = 4;
   public static final int SIM_HALF_TICK = 5;
   public static final int SIM_FULL_TICK = 6;
+  public static final int SIM_RESET = 7;
 
   private int currentType;
 
@@ -40,6 +41,7 @@ public class SimulationIcon extends BaseIcon {
     g2.setStroke(new BasicStroke(scale(1)));
     g2.setColor(currentType > SIM_STEP ? Color.LIGHT_GRAY : Color.WHITE);
     g2.fillOval(0, 0, wh, wh);
+
     if (currentType > SIM_STEP) {
       g2.setColor(Color.WHITE);
       final var wh1 = wh - scale(4);
@@ -51,8 +53,10 @@ public class SimulationIcon extends BaseIcon {
       g2.drawLine(getIconWidth() / 2, getIconWidth() / 2, wh / 4, wh / 4);
       g2.setStroke(new BasicStroke(scale(1)));
     }
+
     g2.setColor(Color.DARK_GRAY);
     g2.drawOval(0, 0, wh, wh);
+
     switch (currentType) {
       case SIM_STEP:
         g2.setColor(Color.GREEN.brighter());
@@ -60,6 +64,7 @@ public class SimulationIcon extends BaseIcon {
         g2.setColor(Color.GREEN.darker());
         g2.drawRect(scale(10), scale(3), scale(1), scale(10));
         // fall through
+
       case SIM_PLAY:
         final int[] xpos = {scale(6), scale(10), scale(6)};
         final int[] ypos = {scale(3), scale(8), scale(13)};
@@ -68,6 +73,7 @@ public class SimulationIcon extends BaseIcon {
         g2.setColor(Color.GREEN.darker());
         g2.drawPolygon(xpos, ypos, 3);
         break;
+
       case SIM_PAUSE:
         g2.setColor(Color.RED.brighter());
         g2.fillRect(scale(5), scale(3), scale(2), scale(10));
@@ -76,6 +82,7 @@ public class SimulationIcon extends BaseIcon {
         g2.drawRect(scale(5), scale(3), scale(2), scale(10));
         g2.drawRect(scale(9), scale(3), scale(2), scale(10));
         break;
+
       case SIM_FULL_TICK:
         g2.setStroke(new BasicStroke(scale(2)));
         g2.setColor(Color.MAGENTA.darker().darker());
@@ -85,6 +92,7 @@ public class SimulationIcon extends BaseIcon {
         g2.fillPolygon(x1, y1, 3);
         g2.drawPolygon(x1, y1, 3);
         // fall through
+
       case SIM_HALF_TICK:
         g2.setStroke(new BasicStroke(scale(2)));
         g2.setColor(Color.MAGENTA);
@@ -94,6 +102,7 @@ public class SimulationIcon extends BaseIcon {
         g2.fillPolygon(x, y, 3);
         g2.drawPolygon(x, y, 3);
         break;
+
       case SIM_ENABLE:
         final int[] x0 = {scale(6), scale(10), scale(6)};
         final int[] y0 = {scale(8), scale(12), scale(15)};
@@ -102,15 +111,27 @@ public class SimulationIcon extends BaseIcon {
         g2.setColor(Color.GREEN.darker().darker().darker());
         g2.drawPolygon(x0, y0, 3);
         break;
+
       case SIM_DISABLE:
         g2.setStroke(new BasicStroke(scale(3)));
         g2.setColor(Color.RED.darker().darker());
         g2.drawLine(scale(6), scale(9), scale(6), scale(14));
         g2.drawLine(scale(10), scale(9), scale(10), scale(14));
+        break;
+
+      case SIM_RESET:
+        g2.setStroke(new BasicStroke(scale(2)));
+        g2.setColor(Color.BLUE.darker());
+        g2.drawArc(scale(3), scale(3), scale(10), scale(10), 45, 270);
+        final int[] xr = {scale(10), scale(13), scale(10)};
+        final int[] yr = {scale(3), scale(3), scale(6)};
+        g2.fillPolygon(xr, yr, 3);
+        break;
+
       default:
-        // Do nothing. Should not really happen.
-        // FIXME: we should have assert to ensure that!
         break;
     }
   }
-}
+    }
+
+

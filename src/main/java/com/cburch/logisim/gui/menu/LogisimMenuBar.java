@@ -28,8 +28,6 @@ import javax.swing.event.ChangeListener;
 @SuppressWarnings("serial")
 public class LogisimMenuBar extends JMenuBar {
   public static final LogisimMenuItem PRINT = new LogisimMenuItem("Print");
-  public static final LogisimMenuItem SIMULATE_RESET_SIMULATION =
-          new LogisimMenuItem("SimulateResetSimulation");
   public static final LogisimMenuItem EXPORT_IMAGE = new LogisimMenuItem("ExportImage");
   public static final LogisimMenuItem CUT = new LogisimMenuItem("Cut");
   public static final LogisimMenuItem COPY = new LogisimMenuItem("Copy");

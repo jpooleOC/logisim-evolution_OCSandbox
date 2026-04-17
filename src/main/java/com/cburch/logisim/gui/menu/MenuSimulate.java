@@ -25,7 +25,6 @@ import java.util.List;
 import javax.swing.ButtonGroup;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
@@ -45,7 +44,6 @@ public class MenuSimulate extends Menu {
 
   private final MenuItemCheckImpl runToggle;
   private final JMenuItem reset = new JMenuItem();
-  private final MenuItemImpl resetSimulation;
   private final MenuItemImpl step;
   private final MenuItemImpl vhdlSimFiles;
   private final MenuItemCheckImpl simulateVhdlEnable;
@@ -76,7 +74,6 @@ public class MenuSimulate extends Menu {
     this.menubar = menubar;
 
     runToggle = new MenuItemCheckImpl(this, LogisimMenuBar.SIMULATE_RUN_TOGGLE);
-    resetSimulation = new MenuItemImpl(this, LogisimMenuBar.SIMULATE_RESET_SIMULATION);
     step = new MenuItemImpl(this, LogisimMenuBar.SIMULATE_STEP);
     simulateVhdlEnable = new MenuItemCheckImpl(this, LogisimMenuBar.SIMULATE_VHDL_ENABLE);
     vhdlSimFiles = new MenuItemImpl(this, LogisimMenuBar.GENERATE_VHDL_SIM_FILES);
@@ -85,7 +82,6 @@ public class MenuSimulate extends Menu {
     tickFull = new MenuItemImpl(this, LogisimMenuBar.TICK_FULL);
 
     menubar.registerItem(LogisimMenuBar.SIMULATE_RUN_TOGGLE, runToggle);
-    menubar.registerItem(LogisimMenuBar.SIMULATE_RESET_SIMULATION, resetSimulation);
     menubar.registerItem(LogisimMenuBar.SIMULATE_STEP, step);
     menubar.registerItem(LogisimMenuBar.SIMULATE_VHDL_ENABLE, simulateVhdlEnable);
     menubar.registerItem(LogisimMenuBar.GENERATE_VHDL_SIM_FILES, vhdlSimFiles);
@@ -107,8 +103,6 @@ public class MenuSimulate extends Menu {
             ((PrefMonitorKeyStroke) AppPreferences.HOTKEY_SIM_TICK_FULL).getWithMask(0));
     ticksEnabled.setAccelerator(
             ((PrefMonitorKeyStroke) AppPreferences.HOTKEY_SIM_TICK_ENABLED).getWithMask(0));
-    resetSimulation.setAccelerator(
-            KeyStroke.getKeyStroke(KeyEvent.VK_R, menuMask | KeyEvent.SHIFT_DOWN_MASK));
 
     AppPreferences.gui_sync_objects.add(this);
 
@@ -122,7 +116,6 @@ public class MenuSimulate extends Menu {
     add(runToggle);
     add(step);
     add(reset);
-    add(resetSimulation);
     add(simulateVhdlEnable);
     add(vhdlSimFiles);
     addSeparator();
@@ -142,7 +135,6 @@ public class MenuSimulate extends Menu {
     setEnabled(false);
     runToggle.setEnabled(false);
     reset.setEnabled(false);
-    resetSimulation.setEnabled(false);
     step.setEnabled(false);
     simulateVhdlEnable.setEnabled(false);
     vhdlSimFiles.setEnabled(false);
@@ -155,7 +147,6 @@ public class MenuSimulate extends Menu {
 
     runToggle.addChangeListener(myListener);
     menubar.addActionListener(LogisimMenuBar.SIMULATE_RUN_TOGGLE, myListener);
-    menubar.addActionListener(LogisimMenuBar.SIMULATE_RESET_SIMULATION, myListener);
     menubar.addActionListener(LogisimMenuBar.SIMULATE_STEP, myListener);
     menubar.addActionListener(LogisimMenuBar.SIMULATE_VHDL_ENABLE, myListener);
     menubar.addActionListener(LogisimMenuBar.GENERATE_VHDL_SIM_FILES, myListener);
@@ -184,8 +175,6 @@ public class MenuSimulate extends Menu {
             ((PrefMonitorKeyStroke) AppPreferences.HOTKEY_SIM_TICK_FULL).getWithMask(0));
     ticksEnabled.setAccelerator(
             ((PrefMonitorKeyStroke) AppPreferences.HOTKEY_SIM_TICK_ENABLED).getWithMask(0));
-    resetSimulation.setAccelerator(
-            KeyStroke.getKeyStroke(KeyEvent.VK_R, menuMask | KeyEvent.SHIFT_DOWN_MASK));
   }
 
   public static List<String> getTickFrequencyStrings() {
@@ -219,7 +208,6 @@ public class MenuSimulate extends Menu {
     setEnabled(present);
     runToggle.setEnabled(present);
     reset.setEnabled(present);
-    resetSimulation.setEnabled(present);
     step.setEnabled(present);
     simulateVhdlEnable.setEnabled(present);
     vhdlSimFiles.setEnabled(present);
@@ -236,7 +224,6 @@ public class MenuSimulate extends Menu {
     this.setText(S.get("simulateMenu"));
     runToggle.setText(S.get("simulateRunItem"));
     reset.setText(S.get("simulateResetItem"));
-    resetSimulation.setText("Reset Simulation");
     step.setText(S.get("simulateStepItem"));
     simulateVhdlEnable.setText(S.get("simulateVhdlEnableItem"));
     vhdlSimFiles.setText(S.get("simulateGenVhdlFilesItem"));
@@ -414,22 +401,6 @@ public class MenuSimulate extends Menu {
       } else if (src == reset) {
         sim.reset();
         proj.repaintCanvas();
-      } else if (src == resetSimulation || src == LogisimMenuBar.SIMULATE_RESET_SIMULATION) {
-        int result =
-                JOptionPane.showConfirmDialog(
-                        null,
-                        "Are you sure you want to reset the simulation?",
-                        "Confirm Reset Simulation",
-                        JOptionPane.YES_NO_OPTION,
-                        JOptionPane.WARNING_MESSAGE);
-
-        if (result == JOptionPane.YES_OPTION) {
-          if (vhdl != null && vhdl.isRunning()) {
-            vhdl.reset();
-          }
-          sim.reset();
-          proj.repaintCanvas();
-        }
       } else if (src == step || src == LogisimMenuBar.SIMULATE_STEP) {
         sim.setAutoPropagation(false);
         sim.step();
