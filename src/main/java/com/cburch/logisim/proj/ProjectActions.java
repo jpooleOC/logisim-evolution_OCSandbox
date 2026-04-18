@@ -84,7 +84,14 @@ public final class ProjectActions {
       }
     }
   }
+  public void resetSimulation(Project proj) {
+    if (proj == null) return;
 
+    var simulator = proj.getSimulator();
+    if (simulator != null) {
+      simulator.reset();
+    }
+  }
   /**
    * Returns true if the filename contains valid characters only, that is, alphanumeric characters
    * and underscores.

@@ -6,7 +6,6 @@
  *
  * This is free software released under GNU GPLv3 license
  */
-
 package com.cburch.logisim.gui.menu;
 
 import com.cburch.logisim.circuit.CircuitState;
@@ -43,19 +42,19 @@ public class LogisimMenuBar extends JMenuBar {
   public static final LogisimMenuItem ADD_CONTROL = new LogisimMenuItem("AddControl");
   public static final LogisimMenuItem REMOVE_CONTROL = new LogisimMenuItem("RemoveControl");
   public static final LogisimMenuItem[] EDIT_ITEMS = {
-    // UNDO, REDO,
-    CUT,
-    COPY,
-    PASTE,
-    DELETE,
-    DUPLICATE,
-    SELECT_ALL,
-    RAISE,
-    LOWER,
-    RAISE_TOP,
-    LOWER_BOTTOM,
-    ADD_CONTROL,
-    REMOVE_CONTROL,
+          // UNDO, REDO,
+          CUT,
+          COPY,
+          PASTE,
+          DELETE,
+          DUPLICATE,
+          SELECT_ALL,
+          RAISE,
+          LOWER,
+          RAISE_TOP,
+          LOWER_BOTTOM,
+          ADD_CONTROL,
+          REMOVE_CONTROL,
   };
   public static final LogisimMenuItem ADD_VHDL = new LogisimMenuItem("AddVhdl");
   public static final LogisimMenuItem IMPORT_VHDL = new LogisimMenuItem("ImportVhdl");
@@ -67,7 +66,7 @@ public class LogisimMenuBar extends JMenuBar {
   public static final LogisimMenuItem EDIT_LAYOUT = new LogisimMenuItem("EditLayout");
   public static final LogisimMenuItem EDIT_APPEARANCE = new LogisimMenuItem("EditAppearance");
   public static final LogisimMenuItem TOGGLE_APPEARANCE =
-      new LogisimMenuItem("ToggleEditLayoutAppearance");
+          new LogisimMenuItem("ToggleEditLayoutAppearance");
   public static final LogisimMenuItem REVERT_APPEARANCE = new LogisimMenuItem("RevertAppearance");
   public static final LogisimMenuItem ANALYZE_CIRCUIT = new LogisimMenuItem("AnalyzeCircuit");
   public static final LogisimMenuItem CIRCUIT_STATS = new LogisimMenuItem("GetCircuitStatistics");
@@ -76,18 +75,20 @@ public class LogisimMenuBar extends JMenuBar {
   public static final LogisimMenuItem SIMULATE_RUN_TOGGLE = new LogisimMenuItem("SimulateRun");
   public static final LogisimMenuItem SIMULATE_STEP = new LogisimMenuItem("SimulateStep");
   public static final LogisimMenuItem SIMULATE_VHDL_ENABLE =
-      new LogisimMenuItem("SimulateVhdlEnable");
+          new LogisimMenuItem("SimulateVhdlEnable");
   public static final LogisimMenuItem GENERATE_VHDL_SIM_FILES =
-      new LogisimMenuItem("GenerateVhdlSimFiles");
+          new LogisimMenuItem("GenerateVhdlSimFiles");
   public static final LogisimMenuItem TICK_ENABLE = new LogisimMenuItem("TickEnable");
   public static final LogisimMenuItem TICK_HALF = new LogisimMenuItem("TickHalf");
   public static final LogisimMenuItem TICK_FULL = new LogisimMenuItem("TickFull");
+
   public final MenuFile file;
   public final MenuEdit edit;
   public final MenuProject project;
   public final MenuSimulate simulate;
   public final MenuHelp help;
   public final MenuFpga fpga;
+
   private final LFrame parent;
   private final MyListener listener;
   private final Project saveProj;
@@ -104,6 +105,7 @@ public class LogisimMenuBar extends JMenuBar {
     this.baseProj = baseProj;
     this.simProj = simProj;
     this.enableListeners = new ArrayList<>();
+
     add(file = new MenuFile(this));
     add(edit = new MenuEdit(this));
     add(project = new MenuProject(this));
@@ -126,7 +128,9 @@ public class LogisimMenuBar extends JMenuBar {
 
   public void addActionListener(LogisimMenuItem which, ActionListener l) {
     final var item = menuItems.get(which);
-    if (item != null) item.addActionListener(l);
+    if (item != null) {
+      item.addActionListener(l);
+    }
   }
 
   public void addEnableListener(ChangeListener l) {
@@ -183,7 +187,9 @@ public class LogisimMenuBar extends JMenuBar {
 
   public void removeActionListener(LogisimMenuItem which, ActionListener l) {
     final var item = menuItems.get(which);
-    if (item != null) item.removeActionListener(l);
+    if (item != null) {
+      item.removeActionListener(l);
+    }
   }
 
   public void removeEnableListener(ChangeListener l) {
@@ -196,7 +202,9 @@ public class LogisimMenuBar extends JMenuBar {
 
   public void setEnabled(LogisimMenuItem which, boolean value) {
     final var item = menuItems.get(which);
-    if (item != null) item.setEnabled(value);
+    if (item != null) {
+      item.setEnabled(value);
+    }
   }
 
   public void setSimulateListener(SimulateListener l) {

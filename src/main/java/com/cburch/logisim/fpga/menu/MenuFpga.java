@@ -6,10 +6,7 @@
  *
  * This is free software released under GNU GPLv3 license
  */
-
 package com.cburch.logisim.fpga.menu;
-
-import static com.cburch.logisim.fpga.Strings.S;
 
 import com.cburch.logisim.fpga.gui.BoardEditor;
 import com.cburch.logisim.fpga.gui.FpgaCommander;
@@ -38,29 +35,32 @@ public class MenuFpga extends JMenu implements ActionListener {
 
     add(BoardEditor);
     add(FPGACommander);
+
     setEnabled(parent instanceof Frame);
   }
 
   @Override
   public void actionPerformed(ActionEvent e) {
     Object src = e.getSource();
+
     if (src == BoardEditor) {
       if (Editor == null) {
         Editor = new BoardEditor();
-      } else {
-        if (!Editor.isActive()) {
-          Editor.setActive();
-        }
+      } else if (!Editor.isActive()) {
+        Editor.setActive();
       }
     } else if (src == FPGACommander) {
-      if (Commander == null) Commander = new FpgaCommander(ThisCircuit);
+      if (Commander == null) {
+        Commander = new FpgaCommander(ThisCircuit);
+      }
       Commander.showGui();
     }
   }
 
   public void localeChanged() {
-    this.setText(S.get("FPGAMenu"));
-    BoardEditor.setText(S.get("FPGABoardEditor"));
-    FPGACommander.setText(S.get("FPGACommander"));
+    this.setText("FPGAMenu");
+    BoardEditor.setText("FPGABoardEditor");
+    FPGACommander.setText("FPGACommander");
   }
 }
+

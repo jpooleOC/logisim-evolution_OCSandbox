@@ -34,11 +34,14 @@ import javax.swing.event.ChangeListener;
 public class MenuSimulate extends Menu {
 
   public static final Double[] SUPPORTED_TICK_FREQUENCIES = {
-      2048000.0, 1024000.0, 512000.0, 256000.0, 128000.0, 64000.0, 32000.0, 16000.0, 8000.0, 4000.0,
-      2000.0, 1000.0, 512.0, 256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.5, 0.25
+          2048000.0, 1024000.0, 512000.0, 256000.0, 128000.0, 64000.0, 32000.0, 16000.0, 8000.0,
+          4000.0, 2000.0, 1000.0, 512.0, 256.0, 128.0, 64.0, 32.0, 16.0, 8.0, 4.0, 2.0, 1.0, 0.5,
+          0.25
   };
+
   private final LogisimMenuBar menubar;
   private final MyListener myListener = new MyListener();
+
   private final MenuItemCheckImpl runToggle;
   private final JMenuItem reset = new JMenuItem();
   private final MenuItemImpl step;
@@ -47,16 +50,20 @@ public class MenuSimulate extends Menu {
   private final MenuItemCheckImpl ticksEnabled;
   private final MenuItemImpl tickHalf;
   private final MenuItemImpl tickFull;
+
   private final JMenu tickFreq = new JMenu();
   private final TickFrequencyChoice[] tickFreqs =
-      new TickFrequencyChoice[SUPPORTED_TICK_FREQUENCIES.length];
+          new TickFrequencyChoice[SUPPORTED_TICK_FREQUENCIES.length];
+
   private final JMenu downStateMenu = new JMenu();
   private final ArrayList<CircuitStateMenuItem> downStateItems = new ArrayList<>();
   private final JMenu upStateMenu = new JMenu();
   private final ArrayList<CircuitStateMenuItem> upStateItems = new ArrayList<>();
+
   private final JMenuItem log = new JMenuItem();
   private final JMenuItem test = new JMenuItem();
   private final JMenuItem assemblyWindow = new JMenuItem();
+
   AssemblyWindow assWin = null;
   private CircuitState currentState = null;
   private CircuitState bottomState = null;
@@ -65,6 +72,7 @@ public class MenuSimulate extends Menu {
 
   public MenuSimulate(LogisimMenuBar menubar) {
     this.menubar = menubar;
+
     runToggle = new MenuItemCheckImpl(this, LogisimMenuBar.SIMULATE_RUN_TOGGLE);
     step = new MenuItemImpl(this, LogisimMenuBar.SIMULATE_STEP);
     simulateVhdlEnable = new MenuItemCheckImpl(this, LogisimMenuBar.SIMULATE_VHDL_ENABLE);
@@ -82,21 +90,20 @@ public class MenuSimulate extends Menu {
     menubar.registerItem(LogisimMenuBar.TICK_FULL, tickFull);
 
     menuMask = getToolkit().getMenuShortcutKeyMaskEx();
-    /* Allow user itself to set the mask */
-    runToggle.setAccelerator(((PrefMonitorKeyStroke)
-        AppPreferences.HOTKEY_SIM_AUTO_PROPAGATE).getWithMask(0));
-    reset.setAccelerator(((PrefMonitorKeyStroke)
-        AppPreferences.HOTKEY_SIM_RESET).getWithMask(0));
-    step.setAccelerator(((PrefMonitorKeyStroke)
-        AppPreferences.HOTKEY_SIM_STEP).getWithMask(0));
-    tickHalf.setAccelerator(((PrefMonitorKeyStroke)
-        AppPreferences.HOTKEY_SIM_TICK_HALF).getWithMask(0));
-    tickFull.setAccelerator(((PrefMonitorKeyStroke)
-        AppPreferences.HOTKEY_SIM_TICK_FULL).getWithMask(0));
-    ticksEnabled.setAccelerator(((PrefMonitorKeyStroke)
-        AppPreferences.HOTKEY_SIM_TICK_ENABLED).getWithMask(0));
 
-    /* add myself to hotkey sync */
+    runToggle.setAccelerator(
+            ((PrefMonitorKeyStroke) AppPreferences.HOTKEY_SIM_AUTO_PROPAGATE).getWithMask(0));
+    reset.setAccelerator(
+            ((PrefMonitorKeyStroke) AppPreferences.HOTKEY_SIM_RESET).getWithMask(0));
+    step.setAccelerator(
+            ((PrefMonitorKeyStroke) AppPreferences.HOTKEY_SIM_STEP).getWithMask(0));
+    tickHalf.setAccelerator(
+            ((PrefMonitorKeyStroke) AppPreferences.HOTKEY_SIM_TICK_HALF).getWithMask(0));
+    tickFull.setAccelerator(
+            ((PrefMonitorKeyStroke) AppPreferences.HOTKEY_SIM_TICK_FULL).getWithMask(0));
+    ticksEnabled.setAccelerator(
+            ((PrefMonitorKeyStroke) AppPreferences.HOTKEY_SIM_TICK_ENABLED).getWithMask(0));
+
     AppPreferences.gui_sync_objects.add(this);
 
     final var bgroup = new ButtonGroup();
@@ -146,12 +153,8 @@ public class MenuSimulate extends Menu {
     menubar.addActionListener(LogisimMenuBar.TICK_ENABLE, myListener);
     menubar.addActionListener(LogisimMenuBar.TICK_HALF, myListener);
     menubar.addActionListener(LogisimMenuBar.TICK_FULL, myListener);
-    // runToggle.addActionListener(myListener);
+
     reset.addActionListener(myListener);
-    // step.addActionListener(myListener);
-    // tickHalf.addActionListener(myListener);
-    // tickFull.addActionListener(myListener);
-    // ticksEnabled.addActionListener(myListener);
     log.addActionListener(myListener);
     test.addActionListener(myListener);
     assemblyWindow.addActionListener(myListener);
@@ -160,18 +163,18 @@ public class MenuSimulate extends Menu {
   }
 
   public void hotkeyUpdate() {
-    runToggle.setAccelerator(((PrefMonitorKeyStroke)
-        AppPreferences.HOTKEY_SIM_AUTO_PROPAGATE).getWithMask(0));
-    reset.setAccelerator(((PrefMonitorKeyStroke)
-        AppPreferences.HOTKEY_SIM_RESET).getWithMask(0));
-    step.setAccelerator(((PrefMonitorKeyStroke)
-        AppPreferences.HOTKEY_SIM_STEP).getWithMask(0));
-    tickHalf.setAccelerator(((PrefMonitorKeyStroke)
-        AppPreferences.HOTKEY_SIM_TICK_HALF).getWithMask(0));
-    tickFull.setAccelerator(((PrefMonitorKeyStroke)
-        AppPreferences.HOTKEY_SIM_TICK_FULL).getWithMask(0));
-    ticksEnabled.setAccelerator(((PrefMonitorKeyStroke)
-        AppPreferences.HOTKEY_SIM_TICK_ENABLED).getWithMask(0));
+    runToggle.setAccelerator(
+            ((PrefMonitorKeyStroke) AppPreferences.HOTKEY_SIM_AUTO_PROPAGATE).getWithMask(0));
+    reset.setAccelerator(
+            ((PrefMonitorKeyStroke) AppPreferences.HOTKEY_SIM_RESET).getWithMask(0));
+    step.setAccelerator(
+            ((PrefMonitorKeyStroke) AppPreferences.HOTKEY_SIM_STEP).getWithMask(0));
+    tickHalf.setAccelerator(
+            ((PrefMonitorKeyStroke) AppPreferences.HOTKEY_SIM_TICK_HALF).getWithMask(0));
+    tickFull.setAccelerator(
+            ((PrefMonitorKeyStroke) AppPreferences.HOTKEY_SIM_TICK_FULL).getWithMask(0));
+    ticksEnabled.setAccelerator(
+            ((PrefMonitorKeyStroke) AppPreferences.HOTKEY_SIM_TICK_ENABLED).getWithMask(0));
   }
 
   public static List<String> getTickFrequencyStrings() {
@@ -179,9 +182,9 @@ public class MenuSimulate extends Menu {
     for (final var supportedTickFrequency : SUPPORTED_TICK_FREQUENCIES) {
       if (supportedTickFrequency < 1000) {
         final var small =
-            (Math.abs(supportedTickFrequency - Math.round(supportedTickFrequency)) < 0.0001);
+                (Math.abs(supportedTickFrequency - Math.round(supportedTickFrequency)) < 0.0001);
         final var freqHz =
-            "" + ((small) ? (int) Math.round(supportedTickFrequency) : supportedTickFrequency);
+                "" + ((small) ? (int) Math.round(supportedTickFrequency) : supportedTickFrequency);
         result.add(S.get("simulateTickFreqItem", freqHz));
       } else {
         final var kf = Math.round(supportedTickFrequency / 100) / 10.0;
@@ -266,10 +269,12 @@ public class MenuSimulate extends Menu {
     if (currentState == value) {
       return;
     }
+
     final var oldSim = currentSim;
     final var oldState = currentState;
     currentSim = sim;
     currentState = value;
+
     if (bottomState == null) {
       bottomState = currentState;
     } else if (currentState == null) {
@@ -314,15 +319,18 @@ public class MenuSimulate extends Menu {
     if (cur != null) {
       cur = cur.getParentState();
     }
+
     clearItems(upStateItems);
     while (cur != null) {
       upStateItems.add(0, new CircuitStateMenuItem(cur));
       cur = cur.getParentState();
     }
+
     recreateStateMenus();
   }
 
-  private class CircuitStateMenuItem extends JMenuItem implements CircuitListener, ActionListener {
+  private class CircuitStateMenuItem extends JMenuItem
+          implements CircuitListener, ActionListener {
 
     private final CircuitState circuitState;
 
@@ -362,12 +370,13 @@ public class MenuSimulate extends Menu {
       if (proj == null) {
         return;
       }
+
       final var vhdl = proj.getVhdlSimulator();
-      if (vhdl != null && (src == simulateVhdlEnable
-          || src == LogisimMenuBar.SIMULATE_VHDL_ENABLE)) {
+      if (vhdl != null
+              && (src == simulateVhdlEnable || src == LogisimMenuBar.SIMULATE_VHDL_ENABLE)) {
         vhdl.setEnabled(!vhdl.isEnabled());
-      } else if (vhdl != null && (src == vhdlSimFiles
-          || src == LogisimMenuBar.GENERATE_VHDL_SIM_FILES)) {
+      } else if (vhdl != null
+              && (src == vhdlSimFiles || src == LogisimMenuBar.GENERATE_VHDL_SIM_FILES)) {
         vhdl.restart();
       } else if (src == log) {
         proj.getLogFrame().setVisible(true);
@@ -390,19 +399,6 @@ public class MenuSimulate extends Menu {
         sim.setAutoPropagation(!sim.isAutoPropagating());
         proj.repaintCanvas();
       } else if (src == reset) {
-        /* Restart VHDL simulation (in QuestaSim) */
-        if (vhdl != null && vhdl.isRunning()) {
-          vhdl.reset();
-          // Wait until the restart finishes, otherwise the signal reset will be
-          // sent to the VHDL simulator before the sim is loaded and errors will
-          // occur. Wait time (0.5 sec) is arbitrary.
-          // FIXME: Find a better way to do blocking reset.
-          try {
-            Thread.sleep(500);
-          } catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
-          }
-        }
         sim.reset();
         proj.repaintCanvas();
       } else if (src == step || src == LogisimMenuBar.SIMULATE_STEP) {
@@ -439,9 +435,11 @@ public class MenuSimulate extends Menu {
       if (sim != currentSim) {
         return;
       }
+
       computeEnabled();
       runToggle.setSelected(sim.isAutoPropagating());
       ticksEnabled.setSelected(sim.isAutoTicking());
+
       final var freq = sim.getTickFrequency();
       for (final var item : tickFreqs) {
         item.setSelected(freq == item.freq);
