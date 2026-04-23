@@ -50,6 +50,8 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
+import java.awt.Window;
+import javax.swing.SwingUtilities;
 
 public class AppPreferences {
   //
@@ -92,6 +94,17 @@ public class AppPreferences {
     public void set(String value) {
       if (findLocale(value) != null) {
         super.set(value);
+      }
+    }
+  }
+
+  public static void refreshOpenWindows() {
+    for (Window window : Window.getWindows()) {
+      if (window != null && window.isDisplayable()) {
+        SwingUtilities.updateComponentTreeUI(window);
+        window.invalidate();
+        window.validate();
+        window.repaint();
       }
     }
   }

@@ -78,7 +78,22 @@ public class LeftPanel extends JTable {
     }
   }
 
-  private static final Border rowInsets = BorderFactory.createMatteBorder(ChronoPanel.GAP, 0, ChronoPanel.GAP, 0, Color.WHITE);
+  static Color resolveThemeAwareTableBackground(Color tableBackground, Color panelBackground) {
+    if (tableBackground != null) return tableBackground;
+    if (panelBackground != null) return panelBackground;
+    return Color.WHITE;
+  }
+
+  static Color getThemeAwareTableBackground() {
+    return resolveThemeAwareTableBackground(
+            javax.swing.UIManager.getColor("Table.background"),
+            javax.swing.UIManager.getColor("Panel.background"));
+  }
+
+  static Border createRowInsets() {
+    return BorderFactory.createMatteBorder(
+            ChronoPanel.GAP, 0, ChronoPanel.GAP, 0, getThemeAwareTableBackground());
+  }
 
   private class SignalRenderer extends DefaultTableCellRenderer {
     private static final long serialVersionUID = 1L;
@@ -88,7 +103,7 @@ public class LeftPanel extends JTable {
       if (!(value instanceof SignalInfo)) return null;
       final var ret = super.getTableCellRendererComponent(table, value, false, false, row, col);
       if (ret instanceof final JLabel label && value instanceof final SignalInfo item) {
-        label.setBorder(rowInsets);
+        label.setBorder(createRowInsets());
         label.setBackground(chronoPanel.rowColors(item, isSelected)[0]);
         label.setIcon(item.icon);
       }
@@ -105,7 +120,7 @@ public class LeftPanel extends JTable {
       final var txt = s.getFormattedValue(chronoPanel.getRightPanel().getCurrentTime());
       final var ret = super.getTableCellRendererComponent(table, txt, false, false, row, col);
       if (ret instanceof JLabel label) {
-        label.setBorder(rowInsets);
+        label.setBorder(createRowInsets());
         label.setIcon(null);
         label.setBackground(chronoPanel.rowColors(s.info, isSelected)[0]);
         label.setHorizontalAlignment(JLabel.CENTER);
@@ -123,7 +138,7 @@ public class LeftPanel extends JTable {
     model = chronoPanel.getModel();
 
     setLayout(new BorderLayout());
-    setBackground(Color.WHITE);
+    setBackground(getThemeAwareTableBackground());
 
     tableModel = new SignalTableModel();
     setModel(tableModel);
